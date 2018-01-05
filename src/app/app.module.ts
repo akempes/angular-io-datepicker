@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { DatePickerModule } from "../datepicker/index";
-import { OverlayModule } from "angular-io-overlay";
 
 import { AppComponent } from "./app.component";
 
@@ -17,7 +16,6 @@ import { AppComponent } from "./app.component";
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
-        OverlayModule,
         DatePickerModule
     ],
     providers: [],
