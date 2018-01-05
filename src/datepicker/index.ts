@@ -1,3 +1,4 @@
+export * from "./onInit.directive";
 export * from "./common";
 export * from "./datePicker";
 export * from "./datePickerPanel";

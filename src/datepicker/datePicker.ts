@@ -3,8 +3,6 @@ import { Component, ComponentRef, ElementRef, Input, OnInit, ViewChild } from "@
 import { Moment, utc } from "moment";
 import * as moment from "moment";
 
-import { OverlayService } from "angular-io-overlay";
-
 import { ControlValueAccessorProviderFactory, local, MomentParseFunction, OnChangeHandler, OnTouchedHandler, ValidatorProviderFactory } from "./common";
 import { DatePickerPanel } from "./datePickerPanel";
 
@@ -108,16 +106,22 @@ function parserFabric(mode: DatePickerMode, format: string): ParserFunction {
                 <span class="datepicker__buttonIcon datepicker__buttonIcon-calendar"></span>
             </button>
         </span>
-        <overlay-host></overlay-host>
+        <div *ngIf="popupOpen">
+            <div class="overlay" (click)="closePopup()"></div>
+            <div class="datePickerPanel">
+                <datepicker-panel #datePickerPanel (on-init)="isOpen(datePickerPanel)" [type]="mode" [displayDateMode]="displayDateMode" [isMeridiem]="isMeridiem"></datepicker-panel>
+            </div>
+        </div>
     `
 })
 export class DatePicker implements ControlValueAccessor, OnInit {
     private _value: Moment;
-    private _popupRef: ComponentRef<any>;
     private parseValue: ParserFunction;
 
     @ViewChild("datePickerContainer")
     public datePickerContainer: ElementRef;
+    @ViewChild("datePickerPanel")
+    public datePickerPanel: DatePickerPanel;
     @Input()
     public mode: "date" | "datetime" | "time" = "date";
     @Input()
@@ -141,8 +145,9 @@ export class DatePicker implements ControlValueAccessor, OnInit {
     public onChange: OnChangeHandler;
     public onTouched: OnTouchedHandler;
     public inputText: string = "";
+    public popupOpen: boolean = false;
 
-    public constructor(private overlayService: OverlayService) {
+    public constructor() {
     }
 
     public ngOnInit(): void {
@@ -197,7 +202,7 @@ export class DatePicker implements ControlValueAccessor, OnInit {
     }
 
     public togglePopup(): void {
-        if (this._popupRef) {
+        if (this.popupOpen) {
             this.closePopup();
         } else {
             this.openPopup();
@@ -205,37 +210,20 @@ export class DatePicker implements ControlValueAccessor, OnInit {
     }
 
     public openPopup(): void {
-        if (this._popupRef) {
+        if (this.popupOpen) {
             return;
         }
+        this.popupOpen = true;
+    }
 
-        const val = this._value;
-
-        this.overlayService.openComponentInPopup<DatePickerPanel>(
-            DatePickerPanel,
-            {
-                alignWithElement: this.datePickerContainer,
-                alignment: this.align,
-                closeOnClick: true
-            }
-        ).then(c => {
-            this._popupRef = c;
-            this._popupRef.onDestroy(() => {
-                this._popupRef = null;
-            });
-
-            c.instance.mode = this.mode;
-            c.instance.isMeridiem = this.isUsingMeridiem;
-            c.instance.displayDateMode = this.displayDateMode;
-            c.instance.writeValue(val);
-            c.instance.registerOnChange((v: any) => this.raiseOnChange(v));
-        });
+    public isOpen(datePickerPanel: DatePickerPanel): void {
+        datePickerPanel.writeValue(this._value);
+        datePickerPanel.registerOnChange((v: any) => this.raiseOnChange(v));
     }
 
     public closePopup(): void {
-        if (this._popupRef) {
-            this._popupRef.destroy();
-            this._popupRef = null;
+        if (this.popupOpen) {
+            this.popupOpen = false;
         }
     }
 

@@ -5,7 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { OverlayModule } from "angular-io-overlay";
 
 import { DaySelector, DecadeSelector, HourSelector, MinuteSelector, MonthSelector, PeriodSwitch, TimeComponentScroller, TimeComponentSelector, YearSelector } from "./selectors/index";
-import { DatePicker, DatePickerPanel, DateSelectorComponent, TimeSelector } from "./index";
+import { DatePicker, DatePickerPanel, DateSelectorComponent, TimeSelector, OnInitDirective } from "./index";
 
 
 @NgModule({
@@ -29,6 +29,7 @@ import { DatePicker, DatePickerPanel, DateSelectorComponent, TimeSelector } from
         DatePicker,
         TimeSelector,
         TimeComponentScroller,
+        OnInitDirective
     ],
     exports: [
         DatePicker
