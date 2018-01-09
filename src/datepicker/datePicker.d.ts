@@ -1,15 +1,14 @@
 import { AbstractControl, ControlValueAccessor } from "@angular/forms";
 import { ElementRef, OnInit } from "@angular/core";
 import { Moment } from "moment";
-import { OverlayService } from "angular-io-overlay";
 import { MomentParseFunction, OnChangeHandler, OnTouchedHandler } from "./common";
+import { DatePickerPanel } from "./datePickerPanel";
 export declare type ParserFunction = (value: any, parseFn: MomentParseFunction) => Moment;
 export declare class DatePicker implements ControlValueAccessor, OnInit {
-    private overlayService;
     private _value;
-    private _popupRef;
     private parseValue;
     datePickerContainer: ElementRef;
+    datePickerPanel: DatePickerPanel;
     mode: "date" | "datetime" | "time";
     displayDateMode: "day" | "month" | "year";
     showClearButton: boolean;
@@ -22,7 +21,8 @@ export declare class DatePicker implements ControlValueAccessor, OnInit {
     onChange: OnChangeHandler;
     onTouched: OnTouchedHandler;
     inputText: string;
-    constructor(overlayService: OverlayService);
+    popupOpen: boolean;
+    constructor();
     ngOnInit(): void;
     writeValue(value: string): void;
     registerOnChange(fn: OnChangeHandler): void;
@@ -34,6 +34,7 @@ export declare class DatePicker implements ControlValueAccessor, OnInit {
     raiseOnChange(value: string): void;
     togglePopup(): void;
     openPopup(): void;
+    isOpen(datePickerPanel: DatePickerPanel): void;
     closePopup(): void;
     clear(): void;
     getCSSClasses(): string;
