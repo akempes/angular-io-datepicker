@@ -25,13 +25,18 @@ var abstractSelector_1 = require("./abstractSelector");
 var DaySelector = (function (_super) {
     __extends(DaySelector, _super);
     function DaySelector() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.daysOfWeek = [];
+        _this.calendar = [];
+        return _this;
     }
-    DaySelector.prototype.getDaysOfWeek = function () {
-        return dateUtils_1.daysOfWeek();
-    };
-    DaySelector.prototype.calendar = function () {
-        return dateUtils_1.monthCalendar(this.value);
+    DaySelector.prototype.ngOnInit = function () {
+        var _this = this;
+        this.daysOfWeek = dateUtils_1.daysOfWeek();
+        this.calendar = dateUtils_1.monthCalendar(this.value);
+        this.dateChange.subscribe(function (newDate) {
+            _this.calendar = dateUtils_1.monthCalendar(newDate);
+        });
     };
     DaySelector.prototype.prev = function () {
         this.value = this.value.subtract(1, "month");
@@ -69,7 +74,7 @@ DaySelector = __decorate([
         styles: [
             ".day-selector.hidden{display:none}.day-selector__days-of-week{display:flex;flex-direction:row;margin:0;padding:0;list-style-type:none;background-color:#eee;flex-wrap:nowrap;justify-content:space-between;align-items:stretch}.day-selector__day-of-week{font-weight:700;flex-grow:1;flex-shrink:1}.day-selector__days-of-month{display:flex;flex-direction:row;margin:0;padding:0;list-style-type:none;flex-wrap:wrap;justify-content:space-between;align-items:stretch}.day-selector__day-of-month{cursor:pointer;flex-grow:1;flex-shrink:0;flex-basis:14%}.day-selector__day-of-month.selected{background:#eee}.day-selector__day-of-month.out-of-month{color:#ccc}"
         ],
-        template: "\n        <div class=\"day-selector\">\n            <period-switch [period]=\"date?.format('MMMM YYYY')\"\n                           (prev)=\"prev()\"\n                           (next)=\"next()\"\n                           (modeChange)=\"modeChanged.emit($event)\">\n            </period-switch>\n            <ul class=\"day-selector__days-of-week\">\n                <li *ngFor=\"let dow of getDaysOfWeek()\"\n                    class=\"day-selector__day-of-week\">\n                    {{dow}}\n                </li>\n            </ul>\n            <ul class=\"day-selector__days-of-month\">\n                <li *ngFor=\"let date of calendar()\"\n                    [ngClass]=\"{ \n                    selected: isSelected(date), \n                    'current-month': isCurrentMonth(date), \n                    'out-of-month': !isCurrentMonth(date), \n                    'day-selector__day-of-month': true  \n                }\"\n                    (mousedown)=\"dateSelected.emit(date); $event.preventDefault(); $event.stopPropagation();\">\n                    {{date.format(\"D\")}}\n                </li>\n            </ul>\n        </div>"
+        template: "\n        <div class=\"day-selector\">\n            <period-switch [period]=\"date?.format('MMMM YYYY')\"\n                           (prev)=\"prev()\"\n                           (next)=\"next()\"\n                           (modeChange)=\"modeChanged.emit($event)\">\n            </period-switch>\n            <ul class=\"day-selector__days-of-week\">\n                <li *ngFor=\"let dow of daysOfWeek\"\n                    class=\"day-selector__day-of-week\">\n                    {{dow}}\n                </li>\n            </ul>\n            <ul class=\"day-selector__days-of-month\">\n                <li *ngFor=\"let date of calendar\"\n                    [ngClass]=\"{\n                    selected: isSelected(date),\n                    'current-month': isCurrentMonth(date),\n                    'out-of-month': !isCurrentMonth(date),\n                    'day-selector__day-of-month': true\n                }\"\n                    (mousedown)=\"dateSelected.emit(date); $event.preventDefault(); $event.stopPropagation();\">\n                    {{date.format(\"D\")}}\n                </li>\n            </ul>\n        </div>"
     })
 ], DaySelector);
 exports.DaySelector = DaySelector;

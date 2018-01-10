@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, OnInit } from "@angular/core";
 import { Moment } from "moment";
 
 import { daysOfWeek, monthCalendar } from "../dateUtils";
@@ -19,18 +19,18 @@ import { AbstractSelector } from "./abstractSelector";
                            (modeChange)="modeChanged.emit($event)">
             </period-switch>
             <ul class="day-selector__days-of-week">
-                <li *ngFor="let dow of getDaysOfWeek()"
+                <li *ngFor="let dow of daysOfWeek"
                     class="day-selector__day-of-week">
                     {{dow}}
                 </li>
             </ul>
             <ul class="day-selector__days-of-month">
-                <li *ngFor="let date of calendar()"
-                    [ngClass]="{ 
-                    selected: isSelected(date), 
-                    'current-month': isCurrentMonth(date), 
-                    'out-of-month': !isCurrentMonth(date), 
-                    'day-selector__day-of-month': true  
+                <li *ngFor="let date of calendar"
+                    [ngClass]="{
+                    selected: isSelected(date),
+                    'current-month': isCurrentMonth(date),
+                    'out-of-month': !isCurrentMonth(date),
+                    'day-selector__day-of-month': true
                 }"
                     (mousedown)="dateSelected.emit(date); $event.preventDefault(); $event.stopPropagation();">
                     {{date.format("D")}}
@@ -38,7 +38,7 @@ import { AbstractSelector } from "./abstractSelector";
             </ul>
         </div>`
 })
-export class DaySelector extends AbstractSelector {
+export class DaySelector extends AbstractSelector implements OnInit {
     @Input()
     public date: Moment;
     @Output()
@@ -48,12 +48,16 @@ export class DaySelector extends AbstractSelector {
     @Output()
     public modeChanged: EventEmitter<any>;
 
-    public getDaysOfWeek(): string[] {
-        return daysOfWeek();
-    }
+    daysOfWeek: string[] = [];
+    calendar: Moment[] = [];
 
-    public calendar(): Moment[] {
-        return monthCalendar(this.value);
+    ngOnInit(): void {
+        this.daysOfWeek = daysOfWeek();
+        this.calendar = monthCalendar(this.value);
+
+        this.dateChange.subscribe(newDate => {
+            this.calendar = monthCalendar(newDate);
+        });
     }
 
     public prev(): void {
