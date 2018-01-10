@@ -24,7 +24,6 @@ Thumbs.db
 tsconfig.json
 tsconfig.publish.json
 tslint.json
-*.ts
 !*.d.ts
 .gitignore
 yarn.lock
