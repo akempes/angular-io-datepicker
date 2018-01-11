@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/core";
 import { Moment } from "moment";
 
 
 @Component({
     selector: "time-component-selector",
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styles: [
         `.time-component-selector__am-pm{cursor:pointer}.time-component-selector{font-size:2em;display:flex;flex-flow:row nowrap;align-items:center}.time-component-selector__component{padding-right:.5em}.time-component-selector__component_last{padding-right:0}`
     ],
@@ -42,6 +43,12 @@ export class TimeComponentSelector {
     public selectHour: EventEmitter<any> = new EventEmitter<any>();
     @Output()
     public selectMinute: EventEmitter<any> = new EventEmitter<any>();
+
+    constructor(public ref: ChangeDetectorRef) {
+        this.dateChange.subscribe(newDate => {
+            this.ref.markForCheck();
+        });
+    }
 
     public plusHour(): void {
         this.dateChange.emit(this.date.clone().add(1, "hour"));

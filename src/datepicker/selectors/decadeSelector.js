@@ -24,11 +24,15 @@ var dateUtils_1 = require("../dateUtils");
 var abstractSelector_1 = require("./abstractSelector");
 var DecadeSelector = (function (_super) {
     __extends(DecadeSelector, _super);
-    function DecadeSelector() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+    function DecadeSelector(ref) {
+        var _this = _super.call(this) || this;
+        _this.ref = ref;
         _this.dateChange = new core_1.EventEmitter();
         _this.dateSelected = new core_1.EventEmitter();
         _this.modeChanged = new core_1.EventEmitter();
+        _this.dateChange.subscribe(function (newDate) {
+            _this.ref.markForCheck();
+        });
         return _this;
     }
     DecadeSelector.prototype.prev = function () {
@@ -76,11 +80,13 @@ __decorate([
 DecadeSelector = __decorate([
     core_1.Component({
         selector: "decade-selector",
+        changeDetection: core_1.ChangeDetectionStrategy.OnPush,
         styles: [
             ".date-set{line-height:2em;text-align:center;vertical-align:middle}.date-set.hidden{display:none}.date-set__dates{display:flex;flex-direction:row;margin:0;padding:0;list-style-type:none;flex-wrap:wrap;justify-content:space-between;align-items:stretch}.date-set__date{cursor:pointer;flex-grow:1;flex-shrink:0;flex-basis:33%}.date-set__date.selected{background:#eee}"
         ],
-        template: "\n        <div class=\"date-set\">\n            <period-switch [period]=\"formatCentury()\"\n                           (prev)=\"prev()\"\n                           (next)=\"next()\"\n                           (modeChange)=\"modeChanged.emit($event)\">\n            </period-switch>\n            <ul class=\"date-set__dates\">\n                <li *ngFor=\"let decade of decades()\"\n                    [ngClass]=\"\n                {\n                     'date-set__date': true, \n                     'selected': isDecadeSelected(decade) \n                }\"\n                    (mousedown)=\"dateSelected.emit(decade); $event.preventDefault(); $event.stopPropagation();\">\n                    {{ formatDecade(decade) }}\n                </li>\n            </ul>\n        </div>\n    "
-    })
+        template: "\n        <div class=\"date-set\">\n            <period-switch [period]=\"formatCentury()\"\n                           (prev)=\"prev()\"\n                           (next)=\"next()\"\n                           (modeChange)=\"modeChanged.emit($event)\">\n            </period-switch>\n            <ul class=\"date-set__dates\">\n                <li *ngFor=\"let decade of decades()\"\n                    [ngClass]=\"\n                {\n                     'date-set__date': true,\n                     'selected': isDecadeSelected(decade)\n                }\"\n                    (mousedown)=\"dateSelected.emit(decade); $event.preventDefault(); $event.stopPropagation();\">\n                    {{ formatDecade(decade) }}\n                </li>\n            </ul>\n        </div>\n    "
+    }),
+    __metadata("design:paramtypes", [core_1.ChangeDetectorRef])
 ], DecadeSelector);
 exports.DecadeSelector = DecadeSelector;
 //# sourceMappingURL=decadeSelector.js.map

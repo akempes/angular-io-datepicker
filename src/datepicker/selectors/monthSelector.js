@@ -23,8 +23,13 @@ var core_1 = require("@angular/core");
 var abstractSelector_1 = require("./abstractSelector");
 var MonthSelector = (function (_super) {
     __extends(MonthSelector, _super);
-    function MonthSelector() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function MonthSelector(ref) {
+        var _this = _super.call(this) || this;
+        _this.ref = ref;
+        _this.dateChange.subscribe(function (newDate) {
+            _this.ref.markForCheck();
+        });
+        return _this;
     }
     MonthSelector.prototype.prev = function () {
         this.value = this.value.subtract(1, "year");
@@ -60,11 +65,13 @@ __decorate([
 MonthSelector = __decorate([
     core_1.Component({
         selector: "month-selector",
+        changeDetection: core_1.ChangeDetectionStrategy.OnPush,
         styles: [
             ".date-set{line-height:2em;text-align:center;vertical-align:middle}.date-set.hidden{display:none}.date-set__dates{display:flex;flex-direction:row;margin:0;padding:0;list-style-type:none;flex-wrap:wrap;justify-content:space-between;align-items:stretch}.date-set__date{cursor:pointer;flex-grow:1;flex-shrink:0;flex-basis:33%}.date-set__date.selected{background:#eee}"
         ],
-        template: "\n        <div class=\"date-set\">\n            <period-switch [period]=\"date?.format('YYYY')\"\n                           (prev)=\"prev()\"\n                           (next)=\"next()\"\n                           (modeChange)=\"modeChanged.emit($event)\">\n            </period-switch>\n            <ul class=\"date-set__dates\">\n                <li *ngFor=\"let month of monthes()\"\n                    [ngClass]=\"\n                {\n                     'date-set__date': true, \n                     'selected': isSelected(month) \n                }\"\n                    (mousedown)=\"dateSelected.emit(month); $event.preventDefault(); $event.stopPropagation();\">\n                    {{ month.format(\"MMMM\") }}\n                </li>\n            </ul>\n        </div>\n    "
-    })
+        template: "\n        <div class=\"date-set\">\n            <period-switch [period]=\"date?.format('YYYY')\"\n                           (prev)=\"prev()\"\n                           (next)=\"next()\"\n                           (modeChange)=\"modeChanged.emit($event)\">\n            </period-switch>\n            <ul class=\"date-set__dates\">\n                <li *ngFor=\"let month of monthes()\"\n                    [ngClass]=\"\n                {\n                     'date-set__date': true,\n                     'selected': isSelected(month)\n                }\"\n                    (mousedown)=\"dateSelected.emit(month); $event.preventDefault(); $event.stopPropagation();\">\n                    {{ month.format(\"MMMM\") }}\n                </li>\n            </ul>\n        </div>\n    "
+    }),
+    __metadata("design:paramtypes", [core_1.ChangeDetectorRef])
 ], MonthSelector);
 exports.MonthSelector = MonthSelector;
 //# sourceMappingURL=monthSelector.js.map

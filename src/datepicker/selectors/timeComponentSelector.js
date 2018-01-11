@@ -11,11 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var TimeComponentSelector = (function () {
-    function TimeComponentSelector() {
+    function TimeComponentSelector(ref) {
+        var _this = this;
+        this.ref = ref;
         this.isMeridiem = true;
         this.dateChange = new core_1.EventEmitter();
         this.selectHour = new core_1.EventEmitter();
         this.selectMinute = new core_1.EventEmitter();
+        this.dateChange.subscribe(function (newDate) {
+            _this.ref.markForCheck();
+        });
     }
     TimeComponentSelector.prototype.plusHour = function () {
         this.dateChange.emit(this.date.clone().add(1, "hour"));
@@ -62,11 +67,13 @@ __decorate([
 TimeComponentSelector = __decorate([
     core_1.Component({
         selector: "time-component-selector",
+        changeDetection: core_1.ChangeDetectionStrategy.OnPush,
         styles: [
             ".time-component-selector__am-pm{cursor:pointer}.time-component-selector{font-size:2em;display:flex;flex-flow:row nowrap;align-items:center}.time-component-selector__component{padding-right:.5em}.time-component-selector__component_last{padding-right:0}"
         ],
         template: "\n        <div class=\"time-component-selector\">\n            <time-component-scroller class=\"time-component-selector__component\"\n                                     [value]=\"date\"\n                                     [format]=\"isMeridiem === true ? 'hh' : 'HH'\"\n                                     (up)=\"plusHour()\"\n                                     (down)=\"minusHour()\"\n                                     (selectValue)=\"selectHour.emit($event)\">\n            </time-component-scroller>\n            <time-component-scroller class=\"time-component-selector__component\"\n                                     [ngClass]=\"{'time-component-selector__component_last': isMeridiem === false}\"\n                                     [value]=\"date\"\n                                     [format]=\" 'mm' \"\n                                     (up)=\"plusMinute()\"\n                                     (down)=\"minusMinute()\"\n                                     (selectValue)=\"selectMinute.emit($event)\">\n            </time-component-scroller>\n            <span *ngIf=\"isMeridiem\" class=\"time-component-selector__am-pm\"\n                  (click)=\"togglePmAm()\">\n                {{ date?.format(\"A\") }}\n            </span>\n        </div>\n    "
-    })
+    }),
+    __metadata("design:paramtypes", [core_1.ChangeDetectorRef])
 ], TimeComponentSelector);
 exports.TimeComponentSelector = TimeComponentSelector;
 //# sourceMappingURL=timeComponentSelector.js.map

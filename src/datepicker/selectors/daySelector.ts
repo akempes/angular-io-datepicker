@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/core";
 import { Moment } from "moment";
 
 import { daysOfWeek, monthCalendar } from "../dateUtils";
@@ -8,6 +8,7 @@ import { AbstractSelector } from "./abstractSelector";
 
 @Component({
     selector: "day-selector",
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styles: [
         `.day-selector.hidden{display:none}.day-selector__days-of-week{display:flex;flex-direction:row;margin:0;padding:0;list-style-type:none;background-color:#eee;flex-wrap:nowrap;justify-content:space-between;align-items:stretch}.day-selector__day-of-week{font-weight:700;flex-grow:1;flex-shrink:1}.day-selector__days-of-month{display:flex;flex-direction:row;margin:0;padding:0;list-style-type:none;flex-wrap:wrap;justify-content:space-between;align-items:stretch}.day-selector__day-of-month{cursor:pointer;flex-grow:1;flex-shrink:0;flex-basis:14%}.day-selector__day-of-month.selected{background:#eee}.day-selector__day-of-month.out-of-month{color:#ccc}`
     ],
@@ -19,13 +20,13 @@ import { AbstractSelector } from "./abstractSelector";
                            (modeChange)="modeChanged.emit($event)">
             </period-switch>
             <ul class="day-selector__days-of-week">
-                <li *ngFor="let dow of daysOfWeek"
+                <li *ngFor="let dow of getDaysOfWeek()"
                     class="day-selector__day-of-week">
                     {{dow}}
                 </li>
             </ul>
             <ul class="day-selector__days-of-month">
-                <li *ngFor="let date of calendar"
+                <li *ngFor="let date of calendar()"
                     [ngClass]="{
                     selected: isSelected(date),
                     'current-month': isCurrentMonth(date),
@@ -38,7 +39,7 @@ import { AbstractSelector } from "./abstractSelector";
             </ul>
         </div>`
 })
-export class DaySelector extends AbstractSelector implements OnInit {
+export class DaySelector extends AbstractSelector {
     @Input()
     public date: Moment;
     @Output()
@@ -48,16 +49,19 @@ export class DaySelector extends AbstractSelector implements OnInit {
     @Output()
     public modeChanged: EventEmitter<any>;
 
-    daysOfWeek: string[] = [];
-    calendar: Moment[] = [];
-
-    ngOnInit(): void {
-        this.daysOfWeek = daysOfWeek();
-        this.calendar = monthCalendar(this.value);
-
+    constructor(public ref: ChangeDetectorRef) {
+        super();
         this.dateChange.subscribe(newDate => {
-            this.calendar = monthCalendar(newDate);
+            this.ref.markForCheck();
         });
+    }
+
+    public getDaysOfWeek(): string[] {
+        return daysOfWeek();
+    }
+
+    public calendar(): Moment[] {
+        return monthCalendar(this.value);
     }
 
     public prev(): void {

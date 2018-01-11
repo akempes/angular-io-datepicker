@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/core";
 import { Moment } from "moment";
 
 import { AbstractSelector } from "./abstractSelector";
@@ -6,6 +6,7 @@ import { AbstractSelector } from "./abstractSelector";
 
 @Component({
     selector: "month-selector",
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styles: [
         `.date-set{line-height:2em;text-align:center;vertical-align:middle}.date-set.hidden{display:none}.date-set__dates{display:flex;flex-direction:row;margin:0;padding:0;list-style-type:none;flex-wrap:wrap;justify-content:space-between;align-items:stretch}.date-set__date{cursor:pointer;flex-grow:1;flex-shrink:0;flex-basis:33%}.date-set__date.selected{background:#eee}`
     ],
@@ -20,8 +21,8 @@ import { AbstractSelector } from "./abstractSelector";
                 <li *ngFor="let month of monthes()"
                     [ngClass]="
                 {
-                     'date-set__date': true, 
-                     'selected': isSelected(month) 
+                     'date-set__date': true,
+                     'selected': isSelected(month)
                 }"
                     (mousedown)="dateSelected.emit(month); $event.preventDefault(); $event.stopPropagation();">
                     {{ month.format("MMMM") }}
@@ -39,6 +40,14 @@ export class MonthSelector extends AbstractSelector {
     public dateSelected: EventEmitter<Moment>;
     @Output()
     public modeChanged: EventEmitter<any>;
+
+
+    constructor(public ref: ChangeDetectorRef) {
+        super();
+        this.dateChange.subscribe(newDate => {
+            this.ref.markForCheck();
+        });
+    }
 
     prev(): void {
         this.value = this.value.subtract(1, "year");
