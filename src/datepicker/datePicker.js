@@ -71,6 +71,7 @@ var DatePicker = DatePicker_1 = (function () {
         this.mode = "date";
         this.displayDateMode = "day";
         this.showClearButton = true;
+        this.isMeridiem = true;
         this.closeBySelection = false;
         this.inputText = "";
         this.popupOpen = false;
