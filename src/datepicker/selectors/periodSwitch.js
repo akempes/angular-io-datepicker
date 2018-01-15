@@ -20,6 +20,7 @@ var PeriodSwitch = (function () {
         this.modeChange.subscribe(function (newDate) {
             _this.ref.markForCheck();
         });
+        this.ref.markForCheck();
     }
     return PeriodSwitch;
 }());

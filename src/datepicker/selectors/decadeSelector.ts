@@ -48,6 +48,7 @@ export class DecadeSelector extends AbstractSelector {
         this.dateChange.subscribe(newDate => {
             this.ref.markForCheck();
         });
+        this.ref.markForCheck();
     }
 
     public prev(): void {

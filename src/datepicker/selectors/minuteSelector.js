@@ -29,6 +29,7 @@ var MinuteSelector = (function (_super) {
         _this.dateChange.subscribe(function (newDate) {
             _this.ref.markForCheck();
         });
+        _this.ref.markForCheck();
         return _this;
     }
     MinuteSelector.prototype.minutes = function () {

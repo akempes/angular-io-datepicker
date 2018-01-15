@@ -47,6 +47,7 @@ export class MonthSelector extends AbstractSelector {
         this.dateChange.subscribe(newDate => {
             this.ref.markForCheck();
         });
+        this.ref.markForCheck();
     }
 
     prev(): void {

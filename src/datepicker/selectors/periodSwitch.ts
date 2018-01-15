@@ -35,5 +35,6 @@ export class PeriodSwitch {
         this.modeChange.subscribe(newDate => {
             this.ref.markForCheck();
         });
+        this.ref.markForCheck();
     }
 }

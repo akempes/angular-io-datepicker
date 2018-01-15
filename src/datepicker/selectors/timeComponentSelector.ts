@@ -48,6 +48,7 @@ export class TimeComponentSelector {
         this.dateChange.subscribe(newDate => {
             this.ref.markForCheck();
         });
+        this.ref.markForCheck();
     }
 
     public plusHour(): void {

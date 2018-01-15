@@ -21,6 +21,7 @@ var TimeComponentSelector = (function () {
         this.dateChange.subscribe(function (newDate) {
             _this.ref.markForCheck();
         });
+        this.ref.markForCheck();
     }
     TimeComponentSelector.prototype.plusHour = function () {
         this.dateChange.emit(this.date.clone().add(1, "hour"));

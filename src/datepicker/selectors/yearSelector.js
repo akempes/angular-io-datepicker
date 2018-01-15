@@ -30,6 +30,7 @@ var YearSelector = (function (_super) {
         _this.dateChange.subscribe(function (newDate) {
             _this.ref.markForCheck();
         });
+        _this.ref.markForCheck();
         return _this;
     }
     YearSelector.prototype.prev = function () {
