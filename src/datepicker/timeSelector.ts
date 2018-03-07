@@ -64,6 +64,7 @@ export class TimeSelector implements ControlValueAccessor {
             }
 
             this._selectedDate = parsed;
+            this._onChange &&  this._onChange(this.selectedDate.clone());
         }
 
         this.displayDate = this.selectedDate || local();

@@ -42,6 +42,7 @@ var TimeSelector = TimeSelector_1 = (function () {
                 parsed = null;
             }
             this._selectedDate = parsed;
+            this._onChange && this._onChange(this.selectedDate.clone());
         }
         this.displayDate = this.selectedDate || common_1.local();
     };
